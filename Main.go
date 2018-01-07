@@ -2,12 +2,9 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"io"
-	"log"
-	"mhsyjwt/gongjus"
 	"net/http"
-	"os"
-	"time"
+	"mhsykongzhiqi/kus"
+	"mhsykongzhiqi/moxings"
 )
 
 func Cors() gin.HandlerFunc {
@@ -24,19 +21,26 @@ type Fanhui struct {
 
 func main() {
 	gin.DisableConsoleColor()
-	f, _ := os.Create("gin" + gongjus.Time2string(time.Now(), gongjus.NYRSFMXHX) + ".log")
-	gin.DefaultWriter = io.MultiWriter(f)
+	//f, _ := os.Create("gin" + gongjus.Time2string(time.Now(), gongjus.NYRSFMXHX) + ".log")
+	//gin.DefaultWriter = io.MultiWriter(f)
 	r := gin.Default()
 	r.Use(Cors())
 	sn := r.Group("sn")
 	{
-		sn.GET("/jieshou", func(c *gin.Context) {
-			log.Println(gongjus.Time2stringnyrsfm(time.Now()))
-			fh := Fanhui{}
-			lpstr := "clztest"
-			fh.Zhi = lpstr
-			fh.Zhuangtai = "chenggong"
-			c.JSON(http.StatusOK, fh)
+		sn.POST("/jieshou", func(c *gin.Context) {
+			xlh := c.PostForm("Xuliehao")
+			macdizhi := c.PostForm("Macdizhi")
+			sb := &moxings.Shebeis{
+				Xuliehao:xlh,
+				Macdizhi:macdizhi,
+				Pici:1,
+			}
+			cg:=kus.Charushebei(sb)
+			if(cg){
+				c.String(http.StatusOK, "\nconfig fuwuxinxi\n\toption yijieshou '1'\n\n")
+				return
+			}
+			c.String(http.StatusOK, "\nconfig fuwuxinxi\n\toption yijieshou '0'\n\n")
 			return
 		})
 	}
