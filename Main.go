@@ -43,6 +43,15 @@ func main() {
 			c.String(http.StatusOK, "\nconfig fuwuxinxi\n\toption yijieshou '0'\n\n")
 			return
 		})
+		sn.POST("/ceshilianwang", func(c *gin.Context) {
+			ceshi := c.PostForm("Ceshilianwang")
+			if(ceshi=="ceshi"){
+				c.String(http.StatusOK, "\nconfig lianwang\n\toption yilianjie '1'\n\n")
+				return
+			}
+			c.String(http.StatusOK, "\nconfig lianwang\n\toption yilianjie '0'\n\n")
+			return
+		})
 	}
 	r.Run(":8989")
 }
