@@ -1,10 +1,10 @@
 package kus
 
 import (
-	"log"
-	"mhsykongzhiqi/moxings"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
+	"log"
+	"mhsykongzhiqi/moxings"
 )
 
 func Charuyinpinshijian(moxing *moxings.Yinpinshijians) bool {

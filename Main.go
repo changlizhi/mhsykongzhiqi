@@ -2,11 +2,10 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"net/http"
 	"mhsykongzhiqi/kus"
 	"mhsykongzhiqi/moxings"
+	"net/http"
 	"strconv"
-	"github.com/lunny/log"
 )
 
 func Cors() gin.HandlerFunc {
@@ -26,6 +25,7 @@ func main() {
 	//f, _ := os.Create("gin" + gongjus.Time2string(time.Now(), gongjus.NYRSFMXHX) + ".log")
 	//gin.DefaultWriter = io.MultiWriter(f)
 	r := gin.Default()
+	r.Static("/jingtais", "./jingtais")
 	r.Use(Cors())
 	sn := r.Group("sn")
 	{
@@ -33,19 +33,19 @@ func main() {
 			xlh := c.PostForm("Xuliehao")
 			macdizhi := c.PostForm("Macdizhi")
 			sb := &moxings.Shebeis{
-				Xuliehao:xlh,
-				Macdizhi:macdizhi,
-				Pici:1,
+				Xuliehao: xlh,
+				Macdizhi: macdizhi,
+				Pici:     1,
 			}
 			cg := kus.Charushebei(sb)
-			if (cg) {
+			if cg {
 				opt := "\nconfig fuwuxinxi\n\t" +
 					"option yijieshou '1'"
 				ypsjcx := moxings.Yinpinshijians{
-					Xuliehao:xlh,
+					Xuliehao: xlh,
 				}
 				ypsj := kus.Chaxunyigeyinpinshijian(ypsjcx)
-				if (ypsj.Dangqianshijian - ypsj.Jieyashijian > 4665600000) {
+				if ypsj.Dangqianshijian-ypsj.Jieyashijian > 4665600000 {
 					opt = opt + "\n\toption xushanchu '1'"
 				} else {
 					opt = opt + "\n\toption xushanchu '0'"
@@ -60,7 +60,7 @@ func main() {
 		})
 		sn.POST("/ceshilianwang", func(c *gin.Context) {
 			ceshi := c.PostForm("Ceshilianwang")
-			if (ceshi == "ceshi") {
+			if ceshi == "ceshi" {
 				c.String(http.StatusOK, "\nconfig lianwang\n\toption yilianjie '1'\n\n")
 				return
 			}
@@ -75,9 +75,9 @@ func main() {
 			jssjint, _ := strconv.ParseInt(jssj, 10, 64)
 
 			mx := &moxings.Bofangshijians{
-				Xuliehao:xlh,
-				Kaishishijian:kssjint,
-				Jieshushijian:jssjint,
+				Xuliehao:      xlh,
+				Kaishishijian: kssjint,
+				Jieshushijian: jssjint,
 			}
 			kus.Charubofangshijian(mx)
 
@@ -92,9 +92,9 @@ func main() {
 			dqsjint, _ := strconv.ParseInt(dqsj, 10, 64)
 
 			mx := &moxings.Yinpinshijians{
-				Xuliehao:xlh,
-				Jieyashijian:jysjint,
-				Dangqianshijian:dqsjint,
+				Xuliehao:        xlh,
+				Jieyashijian:    jysjint,
+				Dangqianshijian: dqsjint,
 			}
 			kus.Charuyinpinshijian(mx)
 

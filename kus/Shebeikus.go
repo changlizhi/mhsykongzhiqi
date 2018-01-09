@@ -1,9 +1,9 @@
 package kus
 
 import (
+	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"mhsykongzhiqi/moxings"
-	_ "github.com/go-sql-driver/mysql"
 )
 
 func Charushebei(moxing *moxings.Shebeis) bool {
