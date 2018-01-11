@@ -52,12 +52,12 @@ func main() {
 				if cg {
 					//返回标记接收并入库成功
 					//增加是否需要删除音频的标记
-					c.String(http.StatusOK, "\nconfig jssn\n\toption chenggong '1'\n\n")
+					c.String(http.StatusOK, "\nconfig jssn\n\toption scchenggong '1'\n\n")
 					return
 				}
-				c.String(http.StatusOK, "\nconfig jssn\n\toption chenggong '0'\n\n")
+				c.String(http.StatusOK, "\nconfig jssn\n\toption scchenggong '0'\n\n")
 			}
-			c.String(http.StatusOK, "\nconfig jssn\n\toption chenggong '1'\n\n")
+			c.String(http.StatusOK, "\nconfig jssn\n\toption scchenggong '1'\n\n")
 			return
 		})
 		sn.POST("/jsyinpinxiazai", func(c *gin.Context) {
@@ -77,12 +77,12 @@ func main() {
 			cg := kus.Charuyinpinxiazai(sb)
 			if cg {
 				//返回标记接收并入库成功
-				opt := "\nconfig jsyinpinxiazai\n\toption chenggong '1'\n\n"
+				opt := "\nconfig jsyinpinxiazai\n\toption scchenggong '1'\n\n"
 				//增加是否需要删除音频的标记
 				c.String(http.StatusOK, opt)
 				return
 			}
-			c.String(http.StatusOK, "\nconfig jssn\n\toption chenggong '0'\n\n")
+			c.String(http.StatusOK, "\nconfig jsyinpinxiazai\n\toption scchenggong '0'\n\n")
 			return
 		})
 		sn.POST("/jsyinpinbofang", func(c *gin.Context) {
@@ -92,22 +92,22 @@ func main() {
 			jssj := c.PostForm("Jieshushijian")
 			kssjint,_ :=strconv.ParseInt(kssj, 10, 64)
 			jssjint,_ :=strconv.ParseInt(jssj, 10, 64)
-			sb := &moxings.Yinpinxiazais{
+			sb := &moxings.Yinpinbofangs{
 				Xuliehao: xlh,
-				Xiazaishijian: kssjint ,
-				Dangqianshijian: jssjint,
+				Kaishishijian: kssjint ,
+				Jieshushijian: jssjint,
 			}
 			// 每次有上传都要入库，用统计的方式计算是否需要更新音频，
 			// 因为控制器的时钟芯片必须联网才能更新时间，而且不一定能更新为互联网时间
-			cg := kus.Charuyinpinxiazai(sb)
+			cg := kus.Charuyinpinbofangs(sb)
 			if cg {
 				//返回标记接收并入库成功
-				opt := "\nconfig jsyinpinxiazai\n\toption chenggong '1'\n\n"
+				opt := "\nconfig jsyinpinbofang\n\toption scchenggong '1'\n\n"
 				//增加是否需要删除音频的标记
 				c.String(http.StatusOK, opt)
 				return
 			}
-			c.String(http.StatusOK, "\nconfig jssn\n\toption chenggong '0'\n\n")
+			c.String(http.StatusOK, "\nconfig jsyinpinbofang\n\toption scchenggong '0'\n\n")
 			return
 		})
 		// 哪些需要跟服务器交互的？
