@@ -7,20 +7,20 @@ import (
 	"mhsykongzhiqi/moxings"
 )
 
-func Charuyinpinshijian(moxing *moxings.Yinpinshijians) bool {
+func Charuyinpinshijian(moxing *moxings.Yinpinxiazais) bool {
 	cr := Db.Create(moxing)
 	if cr.Error != nil {
-		log.Println("Yinpinshijians----cr.Error---", cr.Error)
+		log.Println("Yinpinxiazais----cr.Error---", cr.Error)
 		return false
 	}
 	return true
 }
-func Chaxunyigeyinpinshijian(moxing moxings.Yinpinshijians) *moxings.Yinpinshijians {
-	find := Db.Find(&moxings.Yinpinshijians{}, moxing)
+func Chaxunyigeyinpinshijian(moxing moxings.Yinpinxiazais) *moxings.Yinpinxiazais {
+	find := Db.Find(&moxings.Yinpinxiazais{}, moxing)
 	if find.Error != nil && find.Error == gorm.ErrRecordNotFound {
 		log.Println("Chaxunyigeyinpinshijian--find.Error---", find.Error)
 		return nil
 	}
-	ret := find.Value.(*moxings.Yinpinshijians)
+	ret := find.Value.(*moxings.Yinpinxiazais)
 	return ret
 }
