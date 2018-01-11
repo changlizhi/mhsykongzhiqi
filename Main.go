@@ -65,23 +65,49 @@ func main() {
 			xlh := c.PostForm("Xuliehao")
 			xzsj := c.PostForm("Xiazaishijian")
 			dqsj := c.PostForm("Dangqianshijian")
+			xzsjint,_ :=strconv.ParseInt(xzsj, 10, 64)
+			dqsjint,_ :=strconv.ParseInt(dqsj, 10, 64)
 			sb := &moxings.Yinpinxiazais{
 				Xuliehao: xlh,
-				Xiazaishijian: strconv.ParseInt(xzsj, 10, 64),
-				Dangqianshijian: strconv.ParseInt(dqsj, 10, 64),
+				Xiazaishijian: xzsjint ,
+				Dangqianshijian: dqsjint,
 			}
-			kusb := kus.Chaxunyigeshebei(*sb)
-			if kusb == nil {
-				cg := kus.Charushebei(sb)
-				if cg {
-					//返回标记接收并入库成功
-					opt := "\nconfig jssn\n\toption chenggong '1'\n\n"
-					//增加是否需要删除音频的标记
-					c.String(http.StatusOK, opt)
-					return
-				}
-				c.String(http.StatusOK, "\nconfig jssn\n\toption chenggong '0'\n\n")
+			// 每次有上传都要入库，用统计的方式计算是否需要更新音频，
+			// 因为控制器的时钟芯片必须联网才能更新时间，而且不一定能更新为互联网时间
+			cg := kus.Charuyinpinxiazai(sb)
+			if cg {
+				//返回标记接收并入库成功
+				opt := "\nconfig jsyinpinxiazai\n\toption chenggong '1'\n\n"
+				//增加是否需要删除音频的标记
+				c.String(http.StatusOK, opt)
+				return
 			}
+			c.String(http.StatusOK, "\nconfig jssn\n\toption chenggong '0'\n\n")
+			return
+		})
+		sn.POST("/jsyinpinbofang", func(c *gin.Context) {
+			//接收音频下载时间
+			xlh := c.PostForm("Xuliehao")
+			kssj := c.PostForm("Kaishishijian")
+			jssj := c.PostForm("Jieshushijian")
+			kssjint,_ :=strconv.ParseInt(kssj, 10, 64)
+			jssjint,_ :=strconv.ParseInt(jssj, 10, 64)
+			sb := &moxings.Yinpinxiazais{
+				Xuliehao: xlh,
+				Xiazaishijian: kssjint ,
+				Dangqianshijian: jssjint,
+			}
+			// 每次有上传都要入库，用统计的方式计算是否需要更新音频，
+			// 因为控制器的时钟芯片必须联网才能更新时间，而且不一定能更新为互联网时间
+			cg := kus.Charuyinpinxiazai(sb)
+			if cg {
+				//返回标记接收并入库成功
+				opt := "\nconfig jsyinpinxiazai\n\toption chenggong '1'\n\n"
+				//增加是否需要删除音频的标记
+				c.String(http.StatusOK, opt)
+				return
+			}
+			c.String(http.StatusOK, "\nconfig jssn\n\toption chenggong '0'\n\n")
 			return
 		})
 		// 哪些需要跟服务器交互的？
