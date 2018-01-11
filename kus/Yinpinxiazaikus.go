@@ -7,7 +7,7 @@ import (
 	"mhsykongzhiqi/moxings"
 )
 
-func Charuyinpinshijian(moxing *moxings.Yinpinxiazais) bool {
+func Charuyinpinxiazai(moxing *moxings.Yinpinxiazais) bool {
 	cr := Db.Create(moxing)
 	if cr.Error != nil {
 		log.Println("Yinpinxiazais----cr.Error---", cr.Error)
@@ -15,10 +15,10 @@ func Charuyinpinshijian(moxing *moxings.Yinpinxiazais) bool {
 	}
 	return true
 }
-func Chaxunyigeyinpinshijian(moxing moxings.Yinpinxiazais) *moxings.Yinpinxiazais {
+func Chaxunyigeyinpinxiazai(moxing moxings.Yinpinxiazais) *moxings.Yinpinxiazais {
 	find := Db.Find(&moxings.Yinpinxiazais{}, moxing)
 	if find.Error != nil && find.Error == gorm.ErrRecordNotFound {
-		log.Println("Chaxunyigeyinpinshijian--find.Error---", find.Error)
+		log.Println("Chaxunyigeyinpinxiazai--find.Error---", find.Error)
 		return nil
 	}
 	ret := find.Value.(*moxings.Yinpinxiazais)
