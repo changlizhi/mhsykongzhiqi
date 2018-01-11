@@ -2,9 +2,9 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"net/http"
 	"mhsykongzhiqi/kus"
 	"mhsykongzhiqi/moxings"
-	"net/http"
 	"strconv"
 )
 
@@ -29,35 +29,6 @@ func main() {
 	r.Use(Cors())
 	sn := r.Group("sn")
 	{
-		sn.POST("/jieshou", func(c *gin.Context) {
-			xlh := c.PostForm("Xuliehao")
-			macdizhi := c.PostForm("Macdizhi")
-			sb := &moxings.Shebeis{
-				Xuliehao: xlh,
-				Macdizhi: macdizhi,
-				Pici:     1,
-			}
-			cg := kus.Charushebei(sb)
-			if cg {
-				opt := "\nconfig fuwuxinxi\n\t" +
-					"option yijieshou '1'"
-				ypsjcx := moxings.Yinpinshijians{
-					Xuliehao: xlh,
-				}
-				ypsj := kus.Chaxunyigeyinpinshijian(ypsjcx)
-				if ypsj.Dangqianshijian-ypsj.Jieyashijian > 4665600000 {
-					opt = opt + "\n\toption xushanchu '1'"
-				} else {
-					opt = opt + "\n\toption xushanchu '0'"
-				}
-				opt = opt + "\n\n"
-				//增加是否需要删除音频的标记
-				c.String(http.StatusOK, opt)
-				return
-			}
-			c.String(http.StatusOK, "\nconfig fuwuxinxi\n\toption yijieshou '0'\n\n")
-			return
-		})
 		sn.POST("/ceshilianwang", func(c *gin.Context) {
 			ceshi := c.PostForm("Ceshilianwang")
 			if ceshi == "ceshi" {
@@ -67,58 +38,50 @@ func main() {
 			c.String(http.StatusOK, "\nconfig lianwang\n\toption yilianjie '0'\n\n")
 			return
 		})
-		sn.POST("/bofangshijian", func(c *gin.Context) {
+		sn.POST("/jssn", func(c *gin.Context) {
 			xlh := c.PostForm("Xuliehao")
-			kssj := c.PostForm("Kaishishijian")
-			jssj := c.PostForm("Jieshushijian")
-			kssjint, _ := strconv.ParseInt(kssj, 10, 64)
-			jssjint, _ := strconv.ParseInt(jssj, 10, 64)
-
-			mx := &moxings.Bofangshijians{
-				Xuliehao:      xlh,
-				Kaishishijian: kssjint,
-				Jieshushijian: jssjint,
+			macdizhi := c.PostForm("Macdizhi")
+			sb := &moxings.Shebeis{
+				Xuliehao: xlh,
+				Macdizhi: macdizhi,
+				Pici:     1,
 			}
-			kus.Charubofangshijian(mx)
-
-			c.String(http.StatusOK, "\nconfig quxian\n\toption zaozhongwan '111'\n\n") //在控制器中记录服务器中的判断，如播放过短，过长等信息
+			kusb := kus.Chaxunyigeshebei(*sb)
+			if kusb == nil {
+				cg := kus.Charushebei(sb)
+				if cg {
+					//返回标记接收并入库成功
+					//增加是否需要删除音频的标记
+					c.String(http.StatusOK, "\nconfig jssn\n\toption chenggong '1'\n\n")
+					return
+				}
+				c.String(http.StatusOK, "\nconfig jssn\n\toption chenggong '0'\n\n")
+			}
+			c.String(http.StatusOK, "\nconfig jssn\n\toption chenggong '1'\n\n")
 			return
 		})
-		sn.POST("/yinpinshijian", func(c *gin.Context) {
+		sn.POST("/jsyinpinxiazai", func(c *gin.Context) {
+			//接收音频下载时间
 			xlh := c.PostForm("Xuliehao")
-			jysj := c.PostForm("Jieyashijian")
+			xzsj := c.PostForm("Xiazaishijian")
 			dqsj := c.PostForm("Dangqianshijian")
-			jysjint, _ := strconv.ParseInt(jysj, 10, 64)
-			dqsjint, _ := strconv.ParseInt(dqsj, 10, 64)
-
-			mx := &moxings.Yinpinshijians{
-				Xuliehao:        xlh,
-				Jieyashijian:    jysjint,
-				Dangqianshijian: dqsjint,
+			sb := &moxings.Yinpinxiazais{
+				Xuliehao: xlh,
+				Xiazaishijian: strconv.ParseInt(xzsj, 10, 64),
+				Dangqianshijian: strconv.ParseInt(dqsj, 10, 64),
 			}
-			kus.Charuyinpinshijian(mx)
-
-			c.String(http.StatusOK, "\nconfig yinpin\n\toption dangqianshijian '"+dqsj+"'\n\n") //把服务器获取到的当前时间发下去
-			return
-		})
-		sn.POST("/yinpinlianjie", func(c *gin.Context) { //根据控制器编码下发音频链接，分配不同的音频文件
-			xlh := c.PostForm("Xuliehao")
-			c.String(http.StatusOK, "\nconfig lianjie\n\toption yinpin 'base64'\n\n"+xlh)
-			return
-		})
-		sn.POST("/yinpinmima", func(c *gin.Context) { //根据不同的控制器下发不同的音频密码
-			xlh := c.PostForm("Xuliehao")
-			c.String(http.StatusOK, "\nconfig yinpinmima\n\toption mima '0'\n\n"+xlh)
-			return
-		})
-		sn.POST("/xitongmima", func(c *gin.Context) { //根据不同的控制器下发不同的系统密码
-			xlh := c.PostForm("Xuliehao")
-			c.String(http.StatusOK, "\nconfig xitongmima\n\toption mima '0'\n\n"+xlh)
-			return
-		})
-		sn.POST("/smarthomegengxin", func(c *gin.Context) { //根据不同的控制器发送smarthome.out是否需要更新的标记，如果需要则开机时下载smarthome.out
-			xlh := c.PostForm("Xuliehao")
-			c.String(http.StatusOK, "\nconfig xitong\n\toption gengxin '1'\n\n"+xlh)
+			kusb := kus.Chaxunyigeshebei(*sb)
+			if kusb == nil {
+				cg := kus.Charushebei(sb)
+				if cg {
+					//返回标记接收并入库成功
+					opt := "\nconfig jssn\n\toption chenggong '1'\n\n"
+					//增加是否需要删除音频的标记
+					c.String(http.StatusOK, opt)
+					return
+				}
+				c.String(http.StatusOK, "\nconfig jssn\n\toption chenggong '0'\n\n")
+			}
 			return
 		})
 		// 哪些需要跟服务器交互的？
@@ -154,9 +117,10 @@ func main() {
 		// 5.与4同时播放音频，每个音频时长重新检测和播放一次，检测不到音频则提示。所以所有的控制器逻辑是需要更改的。
 		// 分三个服务，第一个接收数据，第二个下发标记，第三个真正下载
 
-		// 需要更新软件的条件：增加一个初始时全部上传的操作，增加一个使用过程中的提示上传操作。
+		// 增加一个初始时全部上传的操作就在startup.sh里面，每个上传、下载增加一个使用过程中的提示上传操作的sh。
 		// 感觉这些检测在shell里全部都能做，包括是否联网。c只需要对硬件进行操作即可。
 		// 比如增大减小暂停音量，系统初始化：先删除音频，再删除overlay，增加一个mtd的操作和jffs2reset的。
+		// 需要更新软件的条件：
 		// 1.系统下发标记，2.软件不存在
 	}
 	r.Run(":8989")
