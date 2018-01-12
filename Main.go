@@ -2,9 +2,9 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"net/http"
 	"mhsykongzhiqi/kus"
 	"mhsykongzhiqi/moxings"
+	"net/http"
 	"strconv"
 )
 
@@ -69,8 +69,8 @@ func main() {
 			xzsjint, _ := strconv.ParseInt(xzsj, 10, 64)
 			dqsjint, _ := strconv.ParseInt(dqsj, 10, 64)
 			sb := &moxings.Yinpinxiazais{
-				Xuliehao: xlh,
-				Xiazaishijian: xzsjint,
+				Xuliehao:        xlh,
+				Xiazaishijian:   xzsjint,
 				Dangqianshijian: dqsjint,
 			}
 			// 每次有上传都要入库，用统计的方式计算是否需要更新音频，
@@ -92,7 +92,7 @@ func main() {
 			kssjint, _ := strconv.ParseInt(kssj, 10, 64)
 			jssjint, _ := strconv.ParseInt(jssj, 10, 64)
 			sb := &moxings.Yinpinbofangs{
-				Xuliehao: xlh,
+				Xuliehao:      xlh,
 				Kaishishijian: kssjint,
 				Jieshushijian: jssjint,
 			}
@@ -115,9 +115,9 @@ func main() {
 			lj := c.PostForm("Lianjie")
 			sb := &moxings.Yinpinlianjiejius{
 				Xuliehao: xlh,
-				Ipdizhi:ip,
-				Duankou:dk,
-				Lianjie:lj,
+				Ipdizhi:  ip,
+				Duankou:  dk,
+				Lianjie:  lj,
 			}
 			yplj := kus.Chaxunyigeyinpinlianjiejiu(*sb)
 			if yplj == nil {
@@ -159,7 +159,6 @@ func main() {
 		// 比如增大减小暂停音量，系统初始化：先删除音频，再删除overlay，增加一个mtd的操作和jffs2reset的。
 		// 需要更新软件的条件：
 		// 1.系统下发标记，2.软件不存在
-
 
 		// 当联网成功后，马上上传sn，马上进行下列参数的获取
 		// 控制器的播放时间，第一个间距可能会非常大，所以下发删除命令时需要慎重
