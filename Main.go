@@ -155,6 +155,28 @@ func main() {
 			c.String(http.StatusOK, "\nconfig jsyinpinmima\n\toption scchenggong '1'\n\n")
 			return
 		})
+		sn.POST("/jsruanjianbanben", func(c *gin.Context) {
+			//当前音频链接需要更新，其实是当作比较，当不需要更新的时候新链接旧链接是一样的，用最新的一条去比较，id最大的
+			xlh := c.PostForm("Xuliehao")
+			rjbb := c.PostForm("Ruanjianbanben")
+			sb := &moxings.Ruanjianbanbens{
+				Xuliehao: xlh,
+				Banben:rjbb,
+			}
+			yplj := kus.Chaxunyigeruanjianbanben(*sb)
+			if yplj == nil {
+				cg := kus.Charuruanjianbanben(sb)
+				if cg {
+					//返回标记接收并入库成功
+					c.String(http.StatusOK, "\nconfig jsruanjianbanben\n\toption scchenggong '1'\n\n")
+					return
+				}
+				c.String(http.StatusOK, "\nconfig jsruanjianbanben\n\toption scchenggong '0'\n\n")
+				return
+			}
+			c.String(http.StatusOK, "\nconfig jsruanjianbanben\n\toption scchenggong '1'\n\n")
+			return
+		})
 		// 哪些需要跟服务器交互的？
 
 		// 重点要注意控制器中执行的顺序，要把所有的该上传该下载的都下载了才进行系统下发信息命令的option下发，
@@ -165,7 +187,7 @@ func main() {
 		// 1.监测是否已经联网
 		// 2.上传sn序列号、音频下载解压时间、音频播放开始结束时间、
 		// 当前音频链接及端口号、当前系统密码（密文）不上传需要实时更新且无法被服务器感知是否更改且每次都要询问服务器此密码、当前音频密码（密文）、
-		// 当前软件版本信息、当前音频是否失效、当前音频失效时长设置值、
+		// 当前软件版本信息、当前音频失效标记及是否已删除、当前音频失效时长设置值、
 		// 当前系统软件链接及端口号、当前音频是否存在、当前smarthome.out是否存在、当前所有的脚本是否都存在、单个音频时长。
 		// 3.下载更新软件的标记及链接、下载新的音频的标记及链接、下载音频密码更新的标记及链接、
 		// 下载音频链接更新的标记、下载系统密码更新的标记、下载当前版本信息、下载新的失效标记、
