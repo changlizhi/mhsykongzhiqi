@@ -110,13 +110,17 @@ func main() {
 		sn.POST("/jsyinpinlianjiejiu", func(c *gin.Context) {
 			//当前音频链接需要更新，其实是当作比较，当不需要更新的时候新链接旧链接是一样的，用最新的一条去比较，id最大的
 			xlh := c.PostForm("Xuliehao")
+			ip := c.PostForm("Ipdizhi")
+			dk := c.PostForm("Duankou")
 			lj := c.PostForm("Lianjie")
 			sb := &moxings.Yinpinlianjiejius{
 				Xuliehao: xlh,
+				Ipdizhi:ip,
+				Duankou:dk,
 				Lianjie:lj,
 			}
 			yplj := kus.Chaxunyigeyinpinlianjiejiu(*sb)
-			if yplj == nil{
+			if yplj == nil {
 				cg := kus.Charuyinpinlianjiejiu(sb)
 				if cg {
 					//返回标记接收并入库成功
