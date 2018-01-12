@@ -2,11 +2,10 @@ package kus
 
 import (
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/jinzhu/gorm"
 	"log"
 	"mhsykongzhiqi/moxings"
-	"github.com/jinzhu/gorm"
 )
-
 
 func Chaxunyigeshebei(moxing moxings.Shebeis) *moxings.Shebeis {
 	find := Db.Find(&moxings.Shebeis{}, moxing)
@@ -17,7 +16,6 @@ func Chaxunyigeshebei(moxing moxings.Shebeis) *moxings.Shebeis {
 	ret := find.Value.(*moxings.Shebeis)
 	return ret
 }
-
 
 func Charushebei(moxing *moxings.Shebeis) bool {
 	cr := Db.Create(moxing)
