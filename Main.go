@@ -133,6 +133,28 @@ func main() {
 			c.String(http.StatusOK, "\nconfig jsyinpinlianjiejiu\n\toption scchenggong '1'\n\n")
 			return
 		})
+		sn.POST("/jsyinpinmima", func(c *gin.Context) {
+			//当前音频链接需要更新，其实是当作比较，当不需要更新的时候新链接旧链接是一样的，用最新的一条去比较，id最大的
+			xlh := c.PostForm("Xuliehao")
+			ypmima := c.PostForm("Yinpinmima")
+			sb := &moxings.Yinpinmimajius{
+				Xuliehao: xlh,
+				Yinpinmima:ypmima,
+			}
+			yplj := kus.Chaxunyigeyinpinmimajiu(*sb)
+			if yplj == nil {
+				cg := kus.Charuyinpinmimajiu(sb)
+				if cg {
+					//返回标记接收并入库成功
+					c.String(http.StatusOK, "\nconfig jsyinpinmima\n\toption scchenggong '1'\n\n")
+					return
+				}
+				c.String(http.StatusOK, "\nconfig jsyinpinmima\n\toption scchenggong '0'\n\n")
+				return
+			}
+			c.String(http.StatusOK, "\nconfig jsyinpinmima\n\toption scchenggong '1'\n\n")
+			return
+		})
 		// 哪些需要跟服务器交互的？
 
 		// 重点要注意控制器中执行的顺序，要把所有的该上传该下载的都下载了才进行系统下发信息命令的option下发，
