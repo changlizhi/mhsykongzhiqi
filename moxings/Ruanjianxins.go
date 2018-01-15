@@ -1,6 +1,6 @@
 package moxings
-//用于记录所有的脚本版本及内容，防止控制器部分更新后找不到正确的版本
-type Ruanjianbanbens struct {
+//从版本库中拿最新的版本或者拿控制器无法更新到最新版本时找一个合适的版本给控制器
+type Ruanjianxins struct {
 	Id       int
 	Xuliehao string `gorm:"not null;DEFAULT:0"`
 	Banben   string `gorm:"not null;DEFAULT:0"`
@@ -8,6 +8,6 @@ type Ruanjianbanbens struct {
 	Neirong  string `gorm:"not null;DEFAULT:0"`
 }
 
-func (Ruanjianbanbens) TableName() string {
-	return "Ruanjianbanbens"
+func (Ruanjianxins) TableName() string {
+	return "Ruanjianxins"
 }

@@ -210,29 +210,28 @@ func main() {
 			c.String(http.StatusOK, "\nconfig jsyinpindaxiao\n\toption scchenggong '0'\n\n")
 			return
 		})
-		sn.POST("/jsruanjianbanben", func(c *gin.Context) {
+		sn.POST("/jsruanjianjiu", func(c *gin.Context) {
 			//当前音频链接需要更新，其实是当作比较，当不需要更新的时候新链接旧链接是一样的，用最新的一条去比较，id最大的
 			xlh := c.PostForm("Xuliehao")
-			rjbb := c.PostForm("Ruanjianbanben")
-			sb := &moxings.Ruanjianbanbens{
+			bb := c.PostForm("Banben")
+			wz := c.PostForm("Weizhi")
+			nr := c.PostForm("Neirong")
+			sb := &moxings.Ruanjianjius{
 				Xuliehao: xlh,
-				Banben:   rjbb,
+				Banben:   bb,
+				Weizhi:wz,
+				Neirong:nr,
 			}
-			yplj := kus.Chaxunyigeruanjianbanben(*sb)
-			if yplj == nil {
-				cg := kus.Charuruanjianbanben(sb)
-				if cg {
-					//返回标记接收并入库成功bv
-					c.String(http.StatusOK, "\nconfig jsruanjianbanben\n\toption scchenggong '1'\n\n")
-					return
-				}
-				c.String(http.StatusOK, "\nconfig jsruanjianbanben\n\toption scchenggong '0'\n\n")
+			cg := kus.Charuruanjianjiu(sb)
+			if cg {
+				//返回标记接收并入库成功bv
+				c.String(http.StatusOK, "\nconfig jsruanjianjiu\n\toption scchenggong '1'\n\n")
 				return
 			}
-			c.String(http.StatusOK, "\nconfig jsruanjianbanben\n\toption scchenggong '1'\n\n")
+			c.String(http.StatusOK, "\nconfig jsruanjianjiu\n\toption scchenggong '0'\n\n")
 			return
 		})
-		// 哪些需要跟服务器交互的？
+		// 哪些需要跟服务器交互的？c中要搜集控制器的执行状态，什么情况下正常执行。什么情况下要替换版本。
 
 		// 重点要注意控制器中执行的顺序，要把所有的该上传该下载的都下载了才进行系统下发信息命令的option下发，
 		// 所有的事情应该在半小时内做完，不再干预系统供音频播放功能
