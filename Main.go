@@ -177,9 +177,9 @@ func main() {
 		sn.POST("/jsyinpinshixiaoshijian", func(c *gin.Context) {
 			//
 			xlh := c.PostForm("Xuliehao")
-			sc := c.PostForm("Shichang")//秒数
+			sc := c.PostForm("Shichang") //秒数
 			sb := &moxings.Yinpinshixiaoshijianjius{
-				Xuliehao:      xlh,
+				Xuliehao: xlh,
 				Shichang: sc,
 			}
 			cg := kus.Charuyinpinshixiaoshijianjiu(sb)
@@ -194,10 +194,10 @@ func main() {
 		sn.POST("/jsyinpindaxiao", func(c *gin.Context) {
 			//
 			xlh := c.PostForm("Xuliehao")
-			dx := c.PostForm("Daxiao")//大小
-			ysdx := c.PostForm("Yasuodaxiao")//压缩大小
+			dx := c.PostForm("Daxiao")        //大小
+			ysdx := c.PostForm("Yasuodaxiao") //压缩大小
 			sb := &moxings.Yinpindaxiaojius{
-				Xuliehao:xlh,
+				Xuliehao:    xlh,
 				Daxiao:      dx,
 				Yasuodaxiao: ysdx,
 			}
