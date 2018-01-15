@@ -201,7 +201,7 @@ func main() {
 				Daxiao:      dx,
 				Yasuodaxiao: ysdx,
 			}
-			cg := kus.Charuyinpinshixiaoshijianjiu(sb)
+			cg := kus.Charuyinpindaxiaojiu(sb)
 			if cg {
 				//返回标记接收并入库成功
 				c.String(http.StatusOK, "\nconfig jsyinpindaxiao\n\toption scchenggong '1'\n\n")
