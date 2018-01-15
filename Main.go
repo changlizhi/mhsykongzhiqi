@@ -191,6 +191,25 @@ func main() {
 			c.String(http.StatusOK, "\nconfig jsyinpinshixiaoshijian\n\toption scchenggong '0'\n\n")
 			return
 		})
+		sn.POST("/jsyinpindaxiao", func(c *gin.Context) {
+			//
+			xlh := c.PostForm("Xuliehao")
+			dx := c.PostForm("Daxiao")//大小
+			ysdx := c.PostForm("Yasuodaxiao")//压缩大小
+			sb := &moxings.Yinpindaxiaojius{
+				Xuliehao:xlh,
+				Daxiao:      dx,
+				Yasuodaxiao: ysdx,
+			}
+			cg := kus.Charuyinpinshixiaoshijianjiu(sb)
+			if cg {
+				//返回标记接收并入库成功
+				c.String(http.StatusOK, "\nconfig jsyinpindaxiao\n\toption scchenggong '1'\n\n")
+				return
+			}
+			c.String(http.StatusOK, "\nconfig jsyinpindaxiao\n\toption scchenggong '0'\n\n")
+			return
+		})
 		sn.POST("/jsruanjianbanben", func(c *gin.Context) {
 			//当前音频链接需要更新，其实是当作比较，当不需要更新的时候新链接旧链接是一样的，用最新的一条去比较，id最大的
 			xlh := c.PostForm("Xuliehao")
