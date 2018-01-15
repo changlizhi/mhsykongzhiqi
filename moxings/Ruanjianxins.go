@@ -1,4 +1,5 @@
 package moxings
+
 //从版本库中拿最新的版本或者拿控制器无法更新到最新版本时找一个合适的版本给控制器
 type Ruanjianxins struct {
 	Id       int

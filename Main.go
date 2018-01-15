@@ -219,8 +219,8 @@ func main() {
 			sb := &moxings.Ruanjianjius{
 				Xuliehao: xlh,
 				Banben:   bb,
-				Weizhi:wz,
-				Neirong:nr,
+				Weizhi:   wz,
+				Neirong:  nr,
 			}
 			cg := kus.Charuruanjianjiu(sb)
 			if cg {

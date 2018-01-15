@@ -1,4 +1,5 @@
 package moxings
+
 //用于记录所有的脚本版本及内容，防止控制器部分更新后找不到正确的版本
 type Ruanjianbanbens struct {
 	Id       int

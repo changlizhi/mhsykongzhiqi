@@ -1,4 +1,5 @@
 package moxings
+
 //用于从控制器获取软件内容，做比对
 type Ruanjianjius struct {
 	Id       int
