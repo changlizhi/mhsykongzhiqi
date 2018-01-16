@@ -8,7 +8,7 @@ import (
 )
 
 func Chaxunyigeyinpinshanchujiu(moxing moxings.Yinpinshanchujius) *moxings.Yinpinshanchujius {
-	find := Db.Find(&moxings.Yinpinshanchujius{}, moxing)
+	find := Jichucaozuo().Find(&moxings.Yinpinshanchujius{}, moxing)
 	if find.Error != nil && find.Error == gorm.ErrRecordNotFound {
 		log.Println("Chaxunyigeyinpinshanchujiu--find.Error---", find.Error)
 		return nil
@@ -18,7 +18,7 @@ func Chaxunyigeyinpinshanchujiu(moxing moxings.Yinpinshanchujius) *moxings.Yinpi
 }
 
 func Charuyinpinshanchujiu(moxing *moxings.Yinpinshanchujius) bool {
-	cr := Db.Create(moxing)
+	cr := Jichucaozuo().Create(moxing)
 	if cr.Error != nil {
 		log.Println("Charuyinpinshanchujiu----cr.Error---", cr.Error)
 		return false
