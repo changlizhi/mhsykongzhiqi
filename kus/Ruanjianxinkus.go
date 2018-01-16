@@ -24,3 +24,17 @@ func Chaxunyigeruanjianxin(moxing moxings.Ruanjianxins) *moxings.Ruanjianxins {
 	ret := find.Value.(*moxings.Ruanjianxins)
 	return ret
 }
+func Suoyouruanjianxin(xlh string) *[]moxings.Ruanjianxins {
+	//通过序列号查出所有脚本和软件的数据
+	moxing := moxings.Ruanjianxins{
+		Xuliehao:xlh,
+	}
+	ret := &[]moxings.Ruanjianxins{
+	}
+	find := Jichucaozuo().Find(ret, moxing)
+	if find.Error != nil{
+		log.Println("Suoyouruanjianxin--find.Error---", find.Error)
+		return nil
+	}
+	return ret
+}
