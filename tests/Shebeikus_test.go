@@ -4,6 +4,7 @@ import (
 	"mhsykongzhiqi/kus"
 	"mhsykongzhiqi/moxings"
 	"testing"
+	"github.com/lunny/log"
 )
 
 func TestCharushebei(t *testing.T) {
@@ -13,4 +14,13 @@ func TestCharushebei(t *testing.T) {
 		Pici:     1,
 	}
 	kus.Charushebei(st)
+}
+
+func TestChaxunshebei(t *testing.T) {
+	st := moxings.Shebeis{
+		Xuliehao: "14223586423140",
+		Pici:     1,
+	}
+	ret := kus.Chaxunyigeshebei(st)
+	log.Println(ret)
 }
