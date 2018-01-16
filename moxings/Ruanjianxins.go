@@ -7,6 +7,7 @@ type Ruanjianxins struct {
 	Banben   string `gorm:"not null;DEFAULT:0"`
 	Weizhi   string `gorm:"not null;DEFAULT:0"`
 	Neirong  string `gorm:"not null;DEFAULT:0"`
+	Leixing  string `gorm:"not null;DEFAULT:0"`
 }
 
 func (Ruanjianxins) TableName() string {
