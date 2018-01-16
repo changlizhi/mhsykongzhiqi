@@ -1,10 +1,10 @@
 package tests
 
 import (
+	"github.com/lunny/log"
 	"mhsykongzhiqi/kus"
 	"mhsykongzhiqi/moxings"
 	"testing"
-	"github.com/lunny/log"
 )
 
 func TestCharushebei(t *testing.T) {
