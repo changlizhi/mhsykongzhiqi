@@ -3,10 +3,12 @@ package tests
 import (
 	"testing"
 	"mhsykongzhiqi/kus"
-	"github.com/lunny/log"
+	"log"
 )
 
 func TestSuoyouruanjianxin(t *testing.T) {
-	ret := kus.Suoyouruanjianxin("111")
-	log.Println(ret)
+	ret := *kus.Suoyouruanjianxin("111")
+	for _,r := range ret{
+		log.Println(r.Id)
+	}
 }
