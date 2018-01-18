@@ -160,10 +160,13 @@ func main() {
 			xlh := c.PostForm("Xuliehao")
 			scbj := c.PostForm("Shanchubiaoji")
 			ysc := c.PostForm("Yishanchu")
+			scbjint ,_:=strconv.ParseInt(scbj,10,64)
+			yscint ,_:=strconv.ParseInt(ysc,10,64)
+
 			sb := &moxings.Yinpinshanchujius{
 				Xuliehao:      xlh,
-				Shanchubiaoji: scbj,
-				Yishanchu:     ysc,
+				Shanchubiaoji: scbjint,
+				Yishanchu:     yscint,
 			}
 			cg := kus.Charuyinpinshanchujiu(sb)
 			if cg {
@@ -178,9 +181,10 @@ func main() {
 			//
 			xlh := c.PostForm("Xuliehao")
 			sc := c.PostForm("Shichang") //秒数
+			scint,_ := strconv.ParseInt(sc,10,64)//秒数
 			sb := &moxings.Yinpinshixiaoshijianjius{
 				Xuliehao: xlh,
-				Shichang: sc,
+				Shichang: scint,
 			}
 			cg := kus.Charuyinpinshixiaoshijianjiu(sb)
 			if cg {
@@ -196,10 +200,13 @@ func main() {
 			xlh := c.PostForm("Xuliehao")
 			dx := c.PostForm("Daxiao")        //大小
 			ysdx := c.PostForm("Yasuodaxiao") //压缩大小
+			dxint,_ := strconv.Atoi(dx)
+			ysdxint,_ := strconv.Atoi(ysdx)
+
 			sb := &moxings.Yinpindaxiaojius{
 				Xuliehao:    xlh,
-				Daxiao:      dx,
-				Yasuodaxiao: ysdx,
+				Daxiao:      dxint,
+				Yasuodaxiao: ysdxint,
 			}
 			cg := kus.Charuyinpindaxiaojiu(sb)
 			if cg {
@@ -216,11 +223,13 @@ func main() {
 			bb := c.PostForm("Banben")
 			wz := c.PostForm("Weizhi")
 			nr := c.PostForm("Neirong")
+			lx := c.PostForm("Leixing")
 			sb := &moxings.Ruanjianjius{
 				Xuliehao: xlh,
 				Banben:   bb,
 				Weizhi:   wz,
 				Neirong:  nr,
+				Leixing:  lx,
 			}
 			cg := kus.Charuruanjianjiu(sb)
 			if cg {
@@ -243,9 +252,41 @@ func main() {
 		// 当前音频链接及端口号、当前系统密码（密文）不上传需要实时更新且无法被服务器感知是否更改且每次都要询问服务器此密码、当前音频密码（密文）、
 		// 当前音频失效标记及是否已删除、当前音频失效时长设置值、单个音频大小及时长压缩后的大小
 		// 当前软件版本信息、当前系统软件链接及端口号、当前smarthome.out是否存在、当前所有的脚本是否都存在。
+
 		// 3.下载更新软件的标记及链接、下载新的音频的标记及链接、下载音频密码更新的标记及链接、
 		// 下载音频链接更新的标记、下载系统密码更新的标记、下载当前版本信息、下载新的失效标记、
 		// 下载新的失效时长设置、音频时长
+
+		sn.POST("/xfruanjianlianjie", func(c *gin.Context) {
+			//分散上传，统一下发
+			//当前音频链接需要更新，其实是当作比较，当不需要更新的时候新链接旧链接是一样的，用最新的一条去比较，id最大的
+			xlh := c.PostForm("Xuliehao")
+			lx := "uci" //uci,out,sh三选一，现在下发的只是uci的，out和sh文件是要通过软件更新的方式去下发
+			moxing := moxings.Ruanjianxins{
+				Xuliehao: xlh,
+				Leixing:  lx,
+			}
+			kusb := kus.Suoyouruanjianxin(moxing)
+			if kusb != nil {
+				kusbzz := *kusb
+				allconf := "\nconfig xfruanjianlianjie"
+				for _, sb := range kusbzz {
+					allconf += "\n\toption " + sb.Mingcheng + "_neirong '" + sb.Neirong + "'"
+					allconf += "\n\toption " + sb.Mingcheng + "_banben '" + sb.Banben + "'"
+					allconf += "\n\toption " + sb.Mingcheng + "_weizhi '" + sb.Weizhi + "'" // 位置存在则进行位置设置，这个标记也是控制器二次上传时的数值
+				}
+				allconf += "\n\n"
+				c.String(http.StatusOK, allconf)
+				return
+			}
+			c.String(http.StatusOK, "\nconfig xfruanjianlianjie\n\toption scchenggong '0'\n\n")
+			return
+		})
+		// 控制器及时更新服务器端的数据，服务端下发的依据是最新的控制器信息，所以必须在控制器下发之前进行上传。
+		// 并且上传成功控制器才能进行下载，默认是上传失败的。启动时把所有的scchenggong置为0，然后进行上传，成功的服务器端会自动下发为1的值，
+		// 意思就是每次下发都是在运行时做的。启动全部的线程进行工作。
+		// uci set只在启动时整体做一次，其他的都从服务端下发。真正下载解压成功了之后又设置成1
+
 		// 4.根据第三步的标记进行实际逻辑的编写，如果软件需要更新则下载新的软件zip，
 		// 如果音频需要更新（服务端判断收钱后进行确定此标记）则下载新的音频，此时旧音频可能并没有失效，但还是给下载新的音频
 		// 如果超过设定的N个月时间则自动删除音频
